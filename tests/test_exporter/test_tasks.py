@@ -1,14 +1,14 @@
 import pytest
 
 from autofixture import AutoFixture
-from .generators import CustomDocumentGenerator
+from tests.generators import CustomDocumentGenerator
 
 from django.core import mail
 from django.core.files.storage import default_storage
 
-from empiricus_api.accounts.models import User
-from empiricus_api.exporter.models import Exporter, ExporterChunk
-from empiricus_api.exporter.tasks import (
+from tests.fixtures.fake_app.models import FakeModel
+from exporter.models import Exporter, ExporterChunk
+from exporter.tasks import (
     task_process, task_update_exporter_status, task_exporter_send_email
 )
 
@@ -105,9 +105,9 @@ def test_full_creation(users_queryset):
 
 
 def test_full_creation_single_user():
-    AutoFixture(User).create_one()
+    AutoFixture(FakeModel).create_one()
 
-    users_queryset = User.objects.all()
+    users_queryset = FakeModel.objects.all()
 
     assert users_queryset.count() == 1
 
@@ -145,9 +145,9 @@ def test_full_creation_single_user():
 
 
 def test_full_creation_with_rest_some_items_on_last_page():
-    AutoFixture(User).create(12)
+    AutoFixture(FakeModel).create(12)
 
-    users_queryset = User.objects.all()
+    users_queryset = FakeModel.objects.all()
 
     exporter = Exporter.objects.create_exporter(users_queryset, "teste@teste.com.br", {
         "id": "ID",
@@ -184,9 +184,9 @@ def test_full_creation_with_rest_some_items_on_last_page():
 
 @pytest.mark.skip(reason="only demostration on local environment")
 def test_full_creation_massive_test():
-    AutoFixture(User, field_values={'document': CustomDocumentGenerator()}).create(10007)
+    AutoFixture(FakeModel, field_values={'document': CustomDocumentGenerator()}).create(10007)
 
-    users_queryset = User.objects.all()
+    users_queryset = FakeModel.objects.all()
 
     exporter = Exporter.objects.create_exporter(users_queryset, "teste@teste.com.br", {
         "id": "ID",

@@ -6,7 +6,7 @@ from autofixture import AutoFixture
 
 from django.contrib.contenttypes.models import ContentType
 
-from empiricus_api.exporter.models import Exporter, ExporterChunk
+from exporter.models import Exporter, ExporterChunk
 
 pytestmark = pytest.mark.django_db
 

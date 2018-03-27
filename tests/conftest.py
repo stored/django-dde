@@ -2,18 +2,18 @@ import pytest
 
 from autofixture import AutoFixture
 
-from empiricus_api.accounts.models import User
-from empiricus_api.exporter.models import Exporter, ExporterChunk
+from tests.fixtures.fake_app.models import FakeModel
+from exporter.models import Exporter
 
 
 @pytest.fixture(name="users")
 def fixture_users():
-    return AutoFixture(User).create(10)
+    return AutoFixture(FakeModel).create(10)
 
 
 @pytest.fixture(name="users_queryset")
 def fixture_users_queryset(users):
-    return User.objects.all()
+    return FakeModel.objects.all()
 
 
 @pytest.fixture(name="exporter")
