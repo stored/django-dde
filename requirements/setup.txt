@@ -2,3 +2,4 @@ Django==1.11
 django-model-utils==3.0
 jsonfield==2.0.2
 celery==4.1.0
+django-environ==0.4.3
