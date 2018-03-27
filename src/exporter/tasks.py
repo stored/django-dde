@@ -10,7 +10,6 @@ from django.core.files.storage import default_storage
 from django.core.mail import send_mail
 
 from .exceptions import ExporterException
-from .utils import ExporterHelper
 
 logger = logging.getLogger(__name__)
 
