@@ -7,9 +7,9 @@ from django.core import mail
 from django.core.files.storage import default_storage
 
 from tests.fixtures.fake_app.models import FakeModel
-from exporter.models import Exporter, ExporterChunk
+from exporter.models import Exporter
 from exporter.tasks import (
-    task_process, task_update_exporter_status, task_exporter_send_email
+    task_update_exporter_status
 )
 
 
