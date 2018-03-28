@@ -15,3 +15,7 @@ services:
     command: py.test -s --cov-report term --cov-report html
     depends_on:
       - redis
+    links:
+      - redis
+    environment:
+      - DJANGO_SETTINGS_MODEL=tests.settings
