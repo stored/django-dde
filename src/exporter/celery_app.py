@@ -5,6 +5,8 @@ from celery import Celery
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'proj.settings')
 
+import ipdb; ipdb.set_trace()
+
 app = Celery('proj')
 
 # Using a string here means the worker doesn't have to serialize
