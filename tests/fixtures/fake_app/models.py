@@ -7,3 +7,6 @@ class FakeModel(models.Model):
     email = models.EmailField()
     info_1 = models.CharField(max_length=40)
     info_2 = models.DateTimeField()
+
+    class Meta:
+        ordering = ['id']
