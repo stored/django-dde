@@ -1,8 +1,6 @@
 import pickle
 import logging
 
-from celery.task import task
-
 from django.conf import settings
 from django.utils import timezone
 from django.core.paginator import Paginator
@@ -14,10 +12,13 @@ from .celery_app import app
 
 logger = logging.getLogger(__name__)
 
+
 @app.task(bind=True)
 def task_process(self, exporter_id):
     """ After the creation of the Expoter model, this will be called to start the processing of the tasks.
     It separates the queryset in chunks for assync processing, then calls the chunk processing task """
+    import ipdb
+    ipdb.set_trace()
     from .models import Exporter
 
     logger.info(f'[#{exporter_id}] Started exporting')
