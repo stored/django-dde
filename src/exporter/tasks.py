@@ -1,8 +1,6 @@
 import pickle
 import logging
 
-from celery.task import task
-
 from django.conf import settings
 from django.utils import timezone
 from django.core.paginator import Paginator
@@ -13,6 +11,7 @@ from .exceptions import ExporterException
 from .celery_app import app
 
 logger = logging.getLogger(__name__)
+
 
 @app.task(bind=True)
 def task_process(self, exporter_id):
