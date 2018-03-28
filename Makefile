@@ -3,11 +3,11 @@ help: ## make [target]
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 	@echo
 
-develop:  ## Build Docker image for tests
+build:  ## Build Docker image for tests
 	@echo "--> Build Docker image for tests."
 	docker-compose --file docker/development/docker-compose.yml build
 
-full-develop:
+build-no-cache:
 	@echo "--> Build Docker image for tests."
 	docker-compose --file docker/development/docker-compose.yml build --no-cache
 
