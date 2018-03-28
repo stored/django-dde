@@ -8,17 +8,15 @@ from django.core.files.storage import default_storage
 from django.core.mail import send_mail
 
 from .exceptions import ExporterException
-from .celery_app import app
+from celery.task import task
 
 logger = logging.getLogger(__name__)
 
 
-@app.task(bind=True)
+@task(bind=True)
 def task_process(self, exporter_id):
     """ After the creation of the Expoter model, this will be called to start the processing of the tasks.
     It separates the queryset in chunks for assync processing, then calls the chunk processing task """
-    import ipdb
-    ipdb.set_trace()
     from .models import Exporter
 
     logger.info(f'[#{exporter_id}] Started exporting')
@@ -45,7 +43,7 @@ def task_process(self, exporter_id):
     logger.info(f'[#{exporter_id}] Ended processing')
 
 
-@app.task(bind=True)
+@task(bind=True)
 def task_process_chunk(self, chunk_id):
     """ Proccess the chunk from the exporter. """
     from .models import ExporterChunk
@@ -85,7 +83,7 @@ def task_process_chunk(self, chunk_id):
         logger.error(error)
 
 
-@app.task(bind=True)
+@task(bind=True)
 def task_update_exporter_status(self):
     """ Checks periodicaly if any exposter has completed. If it is then calls the finish_exporter task """
     from .models import Exporter
@@ -107,7 +105,7 @@ def task_update_exporter_status(self):
     logger.info('Ended checking exporter status')
 
 
-@app.task(bind=True)
+@task(bind=True)
 def task_finish_exporter(self, exporter_id):
     """ Combines the chunk files in one big file and then saves """
     from .models import Exporter
@@ -136,7 +134,7 @@ def task_finish_exporter(self, exporter_id):
         logger.error(error)
 
 
-@app.task(bind=True)
+@task(bind=True)
 def task_exporter_send_email(self, exporter_id):
     """ Sends a email containg the exporter file url to user """
     from .models import Exporter
