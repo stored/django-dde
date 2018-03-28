@@ -17,6 +17,8 @@ logger = logging.getLogger(__name__)
 def task_process(self, exporter_id):
     """ After the creation of the Expoter model, this will be called to start the processing of the tasks.
     It separates the queryset in chunks for assync processing, then calls the chunk processing task """
+    import ipdb
+    ipdb.set_trace()
     from .models import Exporter
 
     logger.info(f'[#{exporter_id}] Started exporting')
