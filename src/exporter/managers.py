@@ -32,9 +32,6 @@ class ExporterManager(models.Manager):
 
         obj.query.save(f'{obj.uuid}_queryset.pkl', query_file)
 
-        import ipdb
-        ipdb.set_trace()
-
         task_process.delay(obj.id)
 
         return obj
