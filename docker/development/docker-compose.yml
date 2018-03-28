@@ -1,0 +1,16 @@
+version: "3"
+services:
+  test:
+    container_name: exporter-dev
+    build:
+      context: ../../
+      dockerfile: docker/development/Dockerfile
+    volumes:
+      - ../../:/code/
+    command: py.test -s --cov-report term --cov-report html
+
+  redis:
+    container_name: exporter-redis-dev
+    image: redis:4.0.1-alpine
+    ports:
+      - "6379:6379"
