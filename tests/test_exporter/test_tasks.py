@@ -1,3 +1,6 @@
+import os
+import glob
+import shutil
 import pytest
 
 from autofixture import AutoFixture
@@ -219,3 +222,11 @@ def test_full_creation_massive_test():
     assert outbox.from_email == "teste@teste.com.br"
     assert outbox.to == ["teste@teste.com.br"]
     assert outbox.body == default_storage.url(str(exporter.file))
+
+
+def teardown_module(module):
+    directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, os.pardir)
+    for item in glob.iglob(os.path.join(directory, '*.pkl')):
+        os.remove(item)
+
+    shutil.rmtree(os.path.join(directory, 'reports'), ignore_errors=True)
