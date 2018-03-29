@@ -125,9 +125,7 @@ def task_finish_exporter(self, exporter_id):
     )
 
     try:
-        FileHandler(exporter, path_name).proccess()
-        exporter.refresh_from_db()
-
+        exporter = FileHandler(exporter, path_name).proccess()
         exporter.set_status(Exporter.STATUS_CHOICES.done)
 
         logger.info(f'[#{exporter.id}] Finish successful')

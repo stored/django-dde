@@ -22,7 +22,7 @@ class FileHandler:
 
     def proccess(self):
         if self.target == self.VALID_HANDLERS.default_storage:
-            self._proccess_default_storage()
+            return self._proccess_default_storage()
 
     def _get_file_storage(self, storage):
         if storage not in self.VALID_HANDLERS:
