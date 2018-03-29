@@ -3,7 +3,7 @@ import tempfile
 import codecs
 
 from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
+from django.core.files.base import File
 from django.utils.translation import ugettext as _
 from model_utils.choices import Choices
 
@@ -34,8 +34,8 @@ class FileHandler:
         """ Join the file_list (chunked files) into one then saves and return the saved path """
         header = ExporterHelper.get_header(self.exporter.attrs)
 
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=True, encoding="utf-8") as f:
-            writer = csv.writer(f, delimiter=str(';'), quoting=csv.QUOTE_MINIMAL)
+        with tempfile.NamedTemporaryFile(mode='w+', suffix='.csv', delete=True, encoding="utf-8") as f:
+            writer = csv.writer(f, delimiter=str(';'))
             writer.writerow(header)
             f.flush()
 
@@ -46,10 +46,6 @@ class FileHandler:
                         writer.writerow(row[0].split(';'))
                         f.flush()
 
-            # TODO search for better solution
-            # need to be a binary file, but csv.writerow can't write binary, try user DictWriter subclass
-            readble_file = open(f.name, 'rb').read()
-
-            self.exporter.file.save(self.path_name, ContentFile(readble_file))
+            self.exporter.file.save(self.path_name, File(f))
 
         return self.exporter
