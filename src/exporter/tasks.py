@@ -7,9 +7,10 @@ from django.core.paginator import Paginator
 from django.core.files.storage import default_storage
 from django.core.mail import send_mail
 
-from .exceptions import ExporterException
-
 from celery import current_app as app
+
+from .exceptions import ExporterException
+from .handlers import FileHandler
 
 
 logger = logging.getLogger(__name__)
@@ -124,7 +125,7 @@ def task_finish_exporter(self, exporter_id):
     )
 
     try:
-        Exporter.objects.join_files(exporter, path_name)
+        exporter = FileHandler(exporter, path_name).proccess()
         exporter.set_status(Exporter.STATUS_CHOICES.done)
 
         logger.info(f'[#{exporter.id}] Finish successful')
