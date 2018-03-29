@@ -11,6 +11,7 @@ from model_utils.models import TimeStampedModel
 from model_utils.choices import Choices
 from model_utils.fields import MonitorField
 
+from .tasks import task_process
 from .managers import ExporterManager, ExporterChunkManager
 from .exceptions import ExporterStatusException
 
@@ -46,6 +47,9 @@ class Exporter(TimeStampedModel):
 
         self.status = status
         self.save()
+
+    def process(self):
+        task_process.delay(self.id)
 
     @property
     def chunks_is_successful(self):
