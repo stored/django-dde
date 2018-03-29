@@ -5,14 +5,15 @@ import codecs
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.utils.translation import ugettext as _
+from model_utils.choices import Choices
 
 from .utils import ExporterHelper
 
 
 class FileHandler:
-    VALID_HANDLERS = {
-        'default_storage'
-    }
+    VALID_HANDLERS = Choices(
+        ("default_storage", _("default_storage"))
+    )
 
     def __init__(self, exporter, path_name, target_storage='default_storage'):
         self.path_name = path_name
@@ -20,7 +21,7 @@ class FileHandler:
         self.target = self._get_file_storage(target_storage)
 
     def proccess(self):
-        if self.target == 'default_storage':
+        if self.target == self.VALID_HANDLERS.default_storage:
             self._proccess_default_storage()
 
     def _get_file_storage(self, storage):
