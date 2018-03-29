@@ -1,5 +1,8 @@
+import os
+import glob
 import pickle
 import pytest
+import shutil
 import json
 
 from autofixture import AutoFixture
@@ -136,3 +139,11 @@ def test_chunk_has_errors(users_queryset, exporter):
 def test_exporter_is_done(exporter):
     exporter.set_status(Exporter.STATUS_CHOICES.done)
     assert exporter.is_done
+
+
+def teardown_module(module):
+    directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, os.pardir)
+    for item in glob.iglob(os.path.join(directory, '*.pkl')):
+        os.remove(item)
+
+    shutil.rmtree(os.path.join(directory, 'reports'), ignore_errors=True)
