@@ -11,11 +11,11 @@ from .utils import ExporterHelper
 
 class FileHandler:
     VALID_HANDLERS = {
-        'default_storage': default_storage
+        'default_storage'
     }
 
-    def __init__(self, exporter, pathname, target_storage='default_storage'):
-        self.path_name = pathname
+    def __init__(self, exporter, path_name, target_storage='default_storage'):
+        self.path_name = path_name
         self.exporter = exporter
         self.target = self._get_file_storage(target_storage)
 
@@ -27,7 +27,7 @@ class FileHandler:
         if storage not in self.VALID_HANDLERS:
             raise KeyError(_("Invalid or unsupported storage"))
 
-        return self.VALID_HANDLERS[storage]
+        return storage
 
     def _proccess_default_storage(self):
         """ Join the file_list (chunked files) into one then saves and return the saved path """
