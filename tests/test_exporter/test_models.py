@@ -8,6 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from exporter.models import Exporter, ExporterChunk
 
+
 pytestmark = pytest.mark.django_db
 
 
