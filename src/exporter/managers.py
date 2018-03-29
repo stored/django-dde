@@ -11,7 +11,6 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 
 from .utils import ExporterHelper
-from .tasks import task_process
 
 
 class ExporterManager(models.Manager):
@@ -32,7 +31,7 @@ class ExporterManager(models.Manager):
 
         obj.query.save(f'{obj.uuid}_queryset.pkl', query_file)
 
-        task_process.delay(obj.id)
+        obj.process()
 
         return obj
 
