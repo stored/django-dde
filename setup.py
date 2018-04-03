@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 from pip.req import parse_requirements
 
 ROOT = os.path.realpath(os.path.join(os.path.dirname(__file__)))
-__VERSION__ = '0.1.1'
+__VERSION__ = '0.1.2'
 
 base_requires = parse_requirements(os.path.join(ROOT, 'requirements', 'setup.txt'), session='hack')
 base_requires = [str(item.req) for item in base_requires]
