@@ -62,8 +62,9 @@ class ExporterChunkManager(models.Manager):
                 writer.writerow(row)
                 f.flush()
 
-        with open(f.name, 'rb') as f:
-            chunk.file.save(path_name, File(f))
+        f = open(f.name, 'rb')
+        f.seek(0)
+        chunk.file.save(path_name, File(f))
 
         os.remove(f.name)
 
