@@ -1,3 +1,4 @@
+import os
 import csv
 import json
 import pickle
@@ -55,12 +56,15 @@ class ExporterChunkManager(models.Manager):
         for obj in page_queryset:
             rows.append(ExporterHelper.get_row(obj, columns))
 
-        with tempfile.NamedTemporaryFile(mode='w+', suffix='.csv', delete=True, encoding="utf-8") as f:
+        with tempfile.NamedTemporaryFile(mode='w+', suffix='.csv', delete=False, encoding="utf-8") as f:
             writer = csv.writer(f, delimiter=str(';'))
             for row in rows:
                 writer.writerow(row)
                 f.flush()
 
+        with open(f.name, 'rb') as f:
             chunk.file.save(path_name, File(f))
+
+        os.remove(f.name)
 
         return chunk
