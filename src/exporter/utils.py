@@ -17,8 +17,8 @@ class ExporterHelper:
 
     @classmethod
     def get_row(cls, obj, attrs):
-        attrs = json.loads(attrs)
         """ Generates a csv row based on the attrs and received object """
+        attrs = json.loads(attrs)
         data = cls._extract_data(obj, attrs)
         row = [data.get(attr) for attr in attrs]
         return cls._format_row(row)
@@ -26,7 +26,13 @@ class ExporterHelper:
     @classmethod
     def _extract_data(cls, obj, attrs):
         """ Extract data of the object based on the selected attrs """
-        return {attr: cls._extract_data_by_attr(obj, attr) for attr in attrs}
+        data = {}
+
+        for attr in attrs:
+            default = attrs[attr][1] if isinstance(attrs[attr], list) else None
+            data.update({attr: cls._extract_data_by_attr(obj, attr, default)})
+
+        return data
 
     @classmethod
     def _extract_data_by_attr(cls, obj, attr, default=None):
@@ -65,9 +71,6 @@ class ExporterHelper:
             else:
                 v = getattr(o, k, default)
 
-            if v:
-                return v() if callable(v) else v
-            else:
-                return k
+            return v() if callable(v) else v
 
         return reduce(getattr_, attr.split('.'), obj)

@@ -1,3 +1,4 @@
+import os
 import csv
 import tempfile
 import codecs
@@ -34,7 +35,7 @@ class FileHandler:
         """ Join the file_list (chunked files) into one then saves and return the saved path """
         header = ExporterHelper.get_header(self.exporter.attrs)
 
-        with tempfile.NamedTemporaryFile(mode='w+', suffix='.csv', delete=True, encoding="utf-8") as f:
+        with tempfile.NamedTemporaryFile(mode='w+', suffix='.csv', delete=False, encoding="utf-8") as f:
             writer = csv.writer(f, delimiter=str(';'))
             writer.writerow(header)
             f.flush()
@@ -46,6 +47,10 @@ class FileHandler:
                         writer.writerow(row[0].split(';'))
                         f.flush()
 
-            self.exporter.file.save(self.path_name, File(f))
+        f = open(f.name, 'rb')
+        f.seek(0)
+        self.exporter.file.save(self.path_name, File(f))
+
+        os.remove(f.name)
 
         return self.exporter

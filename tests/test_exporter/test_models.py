@@ -11,7 +11,6 @@ from django.contrib.contenttypes.models import ContentType
 
 from exporter.models import Exporter, ExporterChunk
 
-
 pytestmark = pytest.mark.django_db
 
 
@@ -19,7 +18,7 @@ def test_create_exporter(users_queryset):
     exporter = Exporter.objects.create_exporter(users_queryset, "teste@teste.com.br", {
         "id": "ID",
         "name": "NOME",
-        "email": "EMAIL"
+        "email": "EMAIL",
     }, limit_per_task=1)
 
     assert exporter.id
