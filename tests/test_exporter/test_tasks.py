@@ -148,7 +148,7 @@ def test_full_creation_single_user():
 
 
 def test_full_creation_with_rest_some_items_on_last_page():
-    AutoFixture(FakeModel).create(12)
+    AutoFixture(FakeModel).create(13)
 
     users_queryset = FakeModel.objects.all()
 
@@ -163,7 +163,7 @@ def test_full_creation_with_rest_some_items_on_last_page():
     assert exporter.attrs
     assert exporter.email == "teste@teste.com.br"
     assert exporter.limit_per_task == 10
-    assert exporter.total == 12
+    assert exporter.total == 13
 
     exporter.refresh_from_db()
 

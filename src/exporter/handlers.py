@@ -42,9 +42,9 @@ class FileHandler:
 
             for chunk in self.exporter.chunks.all():
                 with default_storage.open(chunk.file.name) as temp_file:
-                    reader = csv.reader(codecs.iterdecode(temp_file, 'utf-8'))
+                    reader = csv.reader(codecs.iterdecode(temp_file, 'utf-8'), delimiter=';')
                     for row in reader:
-                        writer.writerow(row[0].split(';'))
+                        writer.writerow(row)
                         f.flush()
 
         f = open(f.name, 'rb')
