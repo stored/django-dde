@@ -74,7 +74,7 @@ def test_full_creation(users_queryset):
 
     exporter = Exporter.objects.create_exporter(users_queryset, "teste@teste.com.br", {
         "id": "ID",
-        "name": "NOME",
+        "name": "NAME",
         "email": "EMAIL"
     }, 1)
 
@@ -116,7 +116,7 @@ def test_full_creation_single_user():
 
     exporter = Exporter.objects.create_exporter(users_queryset, "teste@teste.com.br", {
         "id": "ID",
-        "name": "NOME",
+        "name": "NAME",
         "email": "EMAIL"
     }, 10)
 
@@ -154,7 +154,7 @@ def test_full_creation_with_rest_some_items_on_last_page():
 
     exporter = Exporter.objects.create_exporter(users_queryset, "teste@teste.com.br", {
         "id": "ID",
-        "name": "NOME",
+        "name": "NAME",
         "email": "EMAIL"
     }, 10)
 
@@ -193,7 +193,7 @@ def test_full_creation_massive_test():
 
     exporter = Exporter.objects.create_exporter(users_queryset, "teste@teste.com.br", {
         "id": "ID",
-        "name": "NOME",
+        "name": "NAME",
         "email": "EMAIL"
     }, 100)
 
@@ -226,22 +226,14 @@ def test_full_creation_massive_test():
 
 def test_quoting_creation():
     AutoFixture(FakeModel, {
-        "name": "Abc, Def, Etc"
+        "name": "Pack, my, box, with, five, dozen, liquor, jugs."
     }).create_one()
 
     AutoFixture(FakeModel).create_one()
 
     exporter = Exporter.objects.create_exporter(FakeModel.objects.all(), "teste@teste.com.br", {
-        "id": "ID",
-        "name": "NOME",
+        "name": "NAME",
     }, 1)
-
-    assert exporter.uuid
-    assert exporter.query
-    assert exporter.attrs
-    assert exporter.email == "teste@teste.com.br"
-    assert exporter.limit_per_task == 1
-    assert exporter.total == 2
 
     exporter.refresh_from_db()
 
@@ -255,13 +247,6 @@ def test_quoting_creation():
     assert exporter.file
     assert exporter.is_done
 
-    outbox = mail.outbox[0]
-
-    assert outbox.subject == 'Seu arquivo foi exportado com sucesso!'
-    assert outbox.from_email == "teste@teste.com.br"
-    assert outbox.to == ["teste@teste.com.br"]
-    assert outbox.body == default_storage.url(str(exporter.file))
-
     users = FakeModel.objects.all()
     with open(str(exporter.file)) as f:
         reader = csv.reader(f, delimiter=';')
@@ -270,8 +255,7 @@ def test_quoting_creation():
             if i == 0:
                 continue
 
-            assert str(users[i-1].id) == row[0]
-            assert str(users[i-1].name) == row[1]
+            assert str(users[i-1].name) == row[0]
 
 
 def teardown_module(module):
