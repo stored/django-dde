@@ -2,7 +2,6 @@ import os
 import glob
 import shutil
 import pytest
-import csv
 
 from autofixture import AutoFixture
 from tests.generators import CustomDocumentGenerator
@@ -249,13 +248,10 @@ def test_quoting_creation():
 
     users = FakeModel.objects.all()
     with open(str(exporter.file)) as f:
-        reader = csv.reader(f, delimiter=';')
+        assert f.readline().strip("\n") == "NAME"
+        assert f.readline().strip("\n") == users[0].name
+        assert f.readline().strip("\n") == users[1].name
 
-        for i, row in enumerate(reader):
-            if i == 0:
-                continue
-
-            assert str(users[i-1].name) == row[0]
 
 
 def teardown_module(module):
