@@ -228,7 +228,9 @@ def test_quoting_creation():
         "name": "Pack, my, box, with, five, dozen, liquor, jugs."
     }).create_one()
 
-    AutoFixture(FakeModel).create_one()
+    AutoFixture(FakeModel, {
+        "name": "How vexingly quick daft zebras, jump!"
+    }).create_one()
 
     exporter = Exporter.objects.create_exporter(FakeModel.objects.all(), "teste@teste.com.br", {
         "name": "NAME",
@@ -246,12 +248,10 @@ def test_quoting_creation():
     assert exporter.file
     assert exporter.is_done
 
-    users = FakeModel.objects.all()
     with open(str(exporter.file)) as f:
         assert f.readline().strip("\n") == "NAME"
-        assert f.readline().strip("\n") == users[0].name
-        assert f.readline().strip("\n") == users[1].name
-
+        assert f.readline().strip("\n") == "Pack, my, box, with, five, dozen, liquor, jugs."
+        assert f.readline().strip("\n") == "How vexingly quick daft zebras, jump!"
 
 
 def teardown_module(module):
