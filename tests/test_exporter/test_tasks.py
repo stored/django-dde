@@ -2,6 +2,7 @@ import os
 import glob
 import shutil
 import pytest
+import csv
 
 from autofixture import AutoFixture
 from tests.generators import CustomDocumentGenerator
@@ -14,7 +15,6 @@ from exporter.models import Exporter
 from exporter.tasks import (
     task_update_exporter_status
 )
-
 
 pytestmark = pytest.mark.django_db
 
@@ -222,6 +222,56 @@ def test_full_creation_massive_test():
     assert outbox.from_email == "teste@teste.com.br"
     assert outbox.to == ["teste@teste.com.br"]
     assert outbox.body == default_storage.url(str(exporter.file))
+
+
+def test_quoting_creation():
+    AutoFixture(FakeModel, {
+        "name": "Abc, Def, Etc"
+    }).create_one()
+
+    AutoFixture(FakeModel).create_one()
+
+    exporter = Exporter.objects.create_exporter(FakeModel.objects.all(), "teste@teste.com.br", {
+        "id": "ID",
+        "name": "NOME",
+    }, 1)
+
+    assert exporter.uuid
+    assert exporter.query
+    assert exporter.attrs
+    assert exporter.email == "teste@teste.com.br"
+    assert exporter.limit_per_task == 1
+    assert exporter.total == 2
+
+    exporter.refresh_from_db()
+
+    assert exporter.is_pending
+    assert exporter.chunks_is_successful
+
+    task_update_exporter_status()
+
+    exporter.refresh_from_db()
+
+    assert exporter.file
+    assert exporter.is_done
+
+    outbox = mail.outbox[0]
+
+    assert outbox.subject == 'Seu arquivo foi exportado com sucesso!'
+    assert outbox.from_email == "teste@teste.com.br"
+    assert outbox.to == ["teste@teste.com.br"]
+    assert outbox.body == default_storage.url(str(exporter.file))
+
+    users = FakeModel.objects.all()
+    with open(str(exporter.file)) as f:
+        reader = csv.reader(f, delimiter=';')
+
+        for i, row in enumerate(reader):
+            if i == 0:
+                continue
+
+            assert str(users[i-1].id) == row[0]
+            assert str(users[i-1].name) == row[1]
 
 
 def teardown_module(module):
