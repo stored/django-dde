@@ -17,7 +17,7 @@ pytestmark = pytest.mark.django_db
 def test_create_exporter(users_queryset):
     exporter = Exporter.objects.create_exporter(users_queryset, "teste@teste.com.br", {
         "id": "ID",
-        "name": "NOME",
+        "name": "NAME",
         "email": "EMAIL",
     }, limit_per_task=1)
 
@@ -39,7 +39,7 @@ def test_create_chunks(users_queryset):
         email="teste@teste.com.br",
         attrs=json.dumps({
             "id": "ID",
-            "name": "NOME",
+            "name": "NAME",
             "email": "EMAIL"
         }),
         limit_per_task=1,
