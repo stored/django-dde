@@ -15,7 +15,6 @@ from exporter.tasks import (
     task_update_exporter_status
 )
 
-
 pytestmark = pytest.mark.django_db
 
 
@@ -74,7 +73,7 @@ def test_full_creation(users_queryset):
 
     exporter = Exporter.objects.create_exporter(users_queryset, "teste@teste.com.br", {
         "id": "ID",
-        "name": "NOME",
+        "name": "NAME",
         "email": "EMAIL"
     }, 1)
 
@@ -116,7 +115,7 @@ def test_full_creation_single_user():
 
     exporter = Exporter.objects.create_exporter(users_queryset, "teste@teste.com.br", {
         "id": "ID",
-        "name": "NOME",
+        "name": "NAME",
         "email": "EMAIL"
     }, 10)
 
@@ -148,13 +147,13 @@ def test_full_creation_single_user():
 
 
 def test_full_creation_with_rest_some_items_on_last_page():
-    AutoFixture(FakeModel).create(12)
+    AutoFixture(FakeModel).create(13)
 
     users_queryset = FakeModel.objects.all()
 
     exporter = Exporter.objects.create_exporter(users_queryset, "teste@teste.com.br", {
         "id": "ID",
-        "name": "NOME",
+        "name": "NAME",
         "email": "EMAIL"
     }, 10)
 
@@ -163,7 +162,7 @@ def test_full_creation_with_rest_some_items_on_last_page():
     assert exporter.attrs
     assert exporter.email == "teste@teste.com.br"
     assert exporter.limit_per_task == 10
-    assert exporter.total == 12
+    assert exporter.total == 13
 
     exporter.refresh_from_db()
 
@@ -193,7 +192,7 @@ def test_full_creation_massive_test():
 
     exporter = Exporter.objects.create_exporter(users_queryset, "teste@teste.com.br", {
         "id": "ID",
-        "name": "NOME",
+        "name": "NAME",
         "email": "EMAIL"
     }, 100)
 
@@ -222,6 +221,37 @@ def test_full_creation_massive_test():
     assert outbox.from_email == "teste@teste.com.br"
     assert outbox.to == ["teste@teste.com.br"]
     assert outbox.body == default_storage.url(str(exporter.file))
+
+
+def test_quoting_creation():
+    AutoFixture(FakeModel, {
+        "name": "Pack, my, box, with, five, dozen, liquor, jugs."
+    }).create_one()
+
+    AutoFixture(FakeModel, {
+        "name": "How vexingly quick daft zebras, jump!"
+    }).create_one()
+
+    exporter = Exporter.objects.create_exporter(FakeModel.objects.all(), "teste@teste.com.br", {
+        "NAME": "name",
+    }, 1)
+
+    exporter.refresh_from_db()
+
+    assert exporter.is_pending
+    assert exporter.chunks_is_successful
+
+    task_update_exporter_status()
+
+    exporter.refresh_from_db()
+
+    assert exporter.file
+    assert exporter.is_done
+
+    with open(str(exporter.file)) as f:
+        assert f.readline().strip("\n") == '"NAME"'
+        assert f.readline().strip("\n") == '"Pack, my, box, with, five, dozen, liquor, jugs."'
+        assert f.readline().strip("\n") == '"How vexingly quick daft zebras, jump!"'
 
 
 def teardown_module(module):
