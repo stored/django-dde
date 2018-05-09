@@ -28,9 +28,9 @@ class ExporterHelper:
         """ Extract data of the object based on the selected attrs """
         data = {}
 
-        for attr in attrs:
-            default = attrs[attr][1] if isinstance(attrs[attr], list) else None
-            data.update({attr: cls._extract_data_by_attr(obj, attrs[attr], default)})
+        for key, attr in attrs.items():
+            default = attr[1] if isinstance(attr, list) else None
+            data.update({key: cls._extract_data_by_attr(obj, attr, default)})
 
         return data
 
