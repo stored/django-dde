@@ -36,7 +36,7 @@ class FileHandler:
         header = ExporterHelper.get_header(self.exporter.attrs)
 
         with tempfile.NamedTemporaryFile(mode='w+', suffix='.csv', delete=False, encoding="utf-8") as f:
-            writer = csv.writer(f, delimiter=str(';'), quoting=csv.QUOTE_MINIMAL)
+            writer = csv.writer(f, delimiter=str(';'), quoting=csv.QUOTE_ALL)
             writer.writerow(header)
             f.flush()
 

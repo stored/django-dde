@@ -13,7 +13,7 @@ class ExporterHelper:
     def get_header(cls, columns):
         """ Separates the header from the json attrs"""
         columns = json.loads(columns)
-        return [columns[attr] for attr in columns]
+        return [attr for attr in columns]
 
     @classmethod
     def get_row(cls, obj, attrs):
@@ -30,7 +30,7 @@ class ExporterHelper:
 
         for attr in attrs:
             default = attrs[attr][1] if isinstance(attrs[attr], list) else None
-            data.update({attr: cls._extract_data_by_attr(obj, attr, default)})
+            data.update({attr: cls._extract_data_by_attr(obj, attrs[attr], default)})
 
         return data
 
