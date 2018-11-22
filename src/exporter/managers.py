@@ -58,7 +58,7 @@ class ExporterChunkManager(models.Manager):
 
         with tempfile.NamedTemporaryFile(mode='w+', suffix='.csv', delete=False, encoding="utf-8") as f:
             writer = csv.writer(f, delimiter=str(';'), quoting=csv.QUOTE_ALL)
-            
+
             for row in rows:
                 writer.writerow(row)
                 f.flush()
