@@ -9,7 +9,7 @@ except ImportError:  # for pip <= 9.0.3
 
 
 ROOT = os.path.realpath(os.path.join(os.path.dirname(__file__)))
-__VERSION__ = '0.1.7'
+__VERSION__ = 'v0.1.8'
 
 base_requires = parse_requirements(os.path.join(ROOT, 'requirements', 'setup.txt'), session='hack')
 base_requires = [str(item.req) for item in base_requires]

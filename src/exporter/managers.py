@@ -57,7 +57,8 @@ class ExporterChunkManager(models.Manager):
             rows.append(ExporterHelper.get_row(obj, columns))
 
         with tempfile.NamedTemporaryFile(mode='w+', suffix='.csv', delete=False, encoding="utf-8") as f:
-            writer = csv.writer(f, delimiter=str(';'), quoting=csv.QUOTE_MINIMAL)
+            writer = csv.writer(f, delimiter=str(';'), quoting=csv.QUOTE_ALL)
+
             for row in rows:
                 writer.writerow(row)
                 f.flush()

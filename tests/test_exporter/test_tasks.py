@@ -233,7 +233,7 @@ def test_quoting_creation():
     }).create_one()
 
     exporter = Exporter.objects.create_exporter(FakeModel.objects.all(), "teste@teste.com.br", {
-        "name": "NAME",
+        "NAME": "name",
     }, 1)
 
     exporter.refresh_from_db()
@@ -249,9 +249,9 @@ def test_quoting_creation():
     assert exporter.is_done
 
     with open(str(exporter.file)) as f:
-        assert f.readline().strip("\n") == "NAME"
-        assert f.readline().strip("\n") == "Pack, my, box, with, five, dozen, liquor, jugs."
-        assert f.readline().strip("\n") == "How vexingly quick daft zebras, jump!"
+        assert f.readline().strip("\n") == '"NAME"'
+        assert f.readline().strip("\n") == '"Pack, my, box, with, five, dozen, liquor, jugs."'
+        assert f.readline().strip("\n") == '"How vexingly quick daft zebras, jump!"'
 
 
 def teardown_module(module):

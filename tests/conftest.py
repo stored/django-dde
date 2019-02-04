@@ -19,7 +19,7 @@ def fixture_users_queryset(users):
 @pytest.fixture(name="exporter")
 def fixture_exporter(users_queryset):
     return Exporter.objects.create_exporter(users_queryset, "teste@teste.com.br", {
-        "id": "ID",
-        "name": "NOME",
-        "email": "EMAIL"
+        "ID": "id",
+        "NAME": "name",
+        "EMAIL": "email"
     }, 1)
