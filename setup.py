@@ -14,8 +14,8 @@ ROOT = os.path.realpath(os.path.join(os.path.dirname(__file__)))
 __VERSION__ = 'v0.1.8'
 
 
-base_requires = read_req(os.path.join(ROOT, 'requirements', 'setup.txt'), session='hack')
-tests_requires = read_req(os.path.join(ROOT, 'requirements', 'development.txt'), session='hack')
+base_requires = read_req(os.path.join(ROOT, 'requirements', 'setup.txt'))
+tests_requires = read_req(os.path.join(ROOT, 'requirements', 'development.txt'))
 
 
 setup(
