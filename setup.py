@@ -2,20 +2,21 @@ import os
 
 from setuptools import setup, find_packages
 
-try:  # for pip >= 10
-    from pip._internal.req import parse_requirements
-except ImportError:  # for pip <= 9.0.3
-    from pip.req import parse_requirements
+
+def read_req(path):
+    with open(path) as f:
+        req = f.read().splitlines()
+        req = [r for r in req if r and not r.startswith('#')]
+        return req
 
 
 ROOT = os.path.realpath(os.path.join(os.path.dirname(__file__)))
 __VERSION__ = 'v0.1.8'
 
-base_requires = parse_requirements(os.path.join(ROOT, 'requirements', 'setup.txt'), session='hack')
-base_requires = [str(item.req) for item in base_requires]
 
-tests_requires = parse_requirements(os.path.join(ROOT, 'requirements', 'development.txt'), session='hack')
-tests_requires = [str(item.req) for item in tests_requires]
+base_requires = read_req(os.path.join(ROOT, 'requirements', 'setup.txt'), session='hack')
+tests_requires = read_req(os.path.join(ROOT, 'requirements', 'development.txt'), session='hack')
+
 
 setup(
     name="django-dde",
