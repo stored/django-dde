@@ -6,7 +6,7 @@ django-environ>=0.4.3
 redis>=2.10.5,<2.11
 boto3>=1.4.6
 django-storages>=1.6.5
-pytest==3.2.3
+pytest==9.0.3
 flake8==3.5.0
 pytest-flake8==0.9.1
 pytest-cov==2.4.0
